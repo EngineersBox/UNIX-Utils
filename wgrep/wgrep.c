@@ -82,6 +82,17 @@ int search_fd(int fd, const char* search_pattern) {
 	return 0;
 }
 
+int stdin_has_data() {
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(STDIN_FILENO, &fds);
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 0; // Return immediately
+	// Effective poll stdin to determine if buffer has data
+	return select(sizeof(fds) * 8, &fds, NULL, NULL, &timeout);
+}
+
 int main(int argc, char* argv[]) {
 	if (argc < 2) {
 		printf("wgrep: searchterm [file ...]\n");
@@ -93,8 +104,8 @@ int main(int argc, char* argv[]) {
 		// Return no lines when searching for empty string pattern
 		return 0;
 	}
-	if (argc == 2) {
-		return search_fd(STDIN_FILENO, search_pattern);
+	if ((argc == 2 || stdin_has_data()) && search_fd(STDIN_FILENO, search_pattern)) {
+		return 1;
 	}
 	int fd, res;
 	for (int i = 2; i < argc; i++) {
