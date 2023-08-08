@@ -14,7 +14,7 @@ Use the provided template C files and the Makefile to compile your programs (sim
 This exercise is for you to familiarise yourself with the system calls `fork()`, `exec()` and `wait()`. 
 
 Write a program `run1.c` takes as argument(s) the name of another program (let's call it the target program) and its expected arguments, and execute the target program, passing on the arguments specified in the command line to the target program. Use a combination of `fork` and `exec` to create a child process to run the target program. The parent process must wait for the child process, and it must also check the status of the child process when it exits. 
-Read the manual page for `wait()` (e.g., using the command `man wait`) to see an example of how to check the exit status of the child process. 
+Read the manual page for `wait()` (e.g., using the command `man wait`) to see an example of how to check the exit status of the child process (using the WEXITSTATUS macro).
 
 Here are some examples of how your program `run1` should behave. (
 _Note: we don't have any automated scripts to check the output of your program, so feel free to use your own messages in response to various exit status of the child process, so you don't need to print out exactly the messages in the examples below._) 
@@ -37,7 +37,7 @@ _Note: we don't have any automated scripts to check the output of your program, 
     cat: /etc/shadow: Permission denied
 
     ****
-    run1 (parent): child process terminated with status 256
+    run1 (parent): child process terminated with status 1
     ```
 
 - The target program does not exist: 
@@ -49,7 +49,7 @@ _Note: we don't have any automated scripts to check the output of your program, 
     run1 (child): execvp error
 
     ****
-    run1 (parent): child process terminated with status 256
+    run1 (parent): child process terminated with status 1
     ```
 
 
