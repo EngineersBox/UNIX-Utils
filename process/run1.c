@@ -20,12 +20,14 @@ int main(int argc, char* argv[]) {
 		if (res) {
 			printf("\n****\nrun1 (child): execvp error\n");
 		}
-		free(args);
+		exit(res);
 	} else {
 		// Parent
 		int stat_loc = 0;
-		wait(&stat_loc);
-		printf("\n****\nrun1 (parent): child terminated with status: %d\n", stat_loc);
+		waitpid(pid, &stat_loc, 0);
+		if (WIFEXITED(stat_loc)) {
+			printf("\n****\nrun1 (parent): child terminated with status: %d\n", WEXITSTATUS(stat_loc));
+		}
 	}
 	return 0; 
 }
